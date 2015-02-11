@@ -61,8 +61,8 @@ $app->get(
 $app->get(
     '/api',
     function () use ($app) {
-		if (isset($_SESSION['l']) && isset($_SESSION['p'])) {
-			$app->redirect('/api');
+		if (!isset($_SESSION['l']) && !isset($_SESSION['p'])) {
+			$app->redirect('/');
 		}
 
 		$lp = R::getAll("SELECT login, password FROM users");
@@ -73,7 +73,7 @@ $app->get(
 					$twig = new Twig_Environment($loader);
 					$template = $twig->loadTemplate('ClosePage.tmpl');
 					echo $template->render(array(
-					
+						'login' => $_SESSION['l']
 					));
 				} 
 				catch (Exception $cpage) {
