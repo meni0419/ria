@@ -40,7 +40,11 @@ $app = new \Slim\Slim();
 //get page '/' auth
 $app->get(
     '/',
-    function () {
+    function () use ($app) {
+		if (isset($_SESSION['l']) && isset($_SESSION['p'])) {
+			$app->redirect('/api');
+		}
+		
         $template = <<<EOT
         <form method="POST" action="/">
 			<label>Логин</label><input name="l" size="25" type="text"><br>
