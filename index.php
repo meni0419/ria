@@ -45,15 +45,15 @@ $app->get(
 			$app->redirect('/api');
 		}
 		
-        $template = <<<EOT
-        <form method="POST" action="/">
-			<label>Логин</label><input name="l" size="25" type="text"><br>
-			<label>Пароль</label><input name="p" size="25" type="password"><br>
-		    <input name="remember" type="checkbox"><label>Запомнить</label><br>
-			<input type="submit" value="Войти">
-		</form>
-EOT;
-        echo $template;
+        try {
+			$loader = new Twig_Loader_Filesystem('templates');
+			$twig = new Twig_Environment($loader);
+			$template = $twig->loadTemplate('auth.tmpl');
+			echo $template->render(array());
+		} 
+		catch (Exception $auth) {
+			die ('ERROR: ' . $auth->getMessage());
+		}
     }
 );
 
@@ -61,19 +61,24 @@ EOT;
 $app->get(
     '/api',
     function () use ($app) {
-		if (!isset($_SESSION['l'])){
-			$app->redirect('/');
+		if (isset($_SESSION['l']) && isset($_SESSION['p'])) {
+			$app->redirect('/api');
 		}
-		
-		$lp = R::getAll("SELECT login, password FROM users"); 
+
+		$lp = R::getAll("SELECT login, password FROM users");
 		foreach ($lp as $k=>$v) {
 			if ($_SESSION['l'] == $v["login"] && $_SESSION['p'] == $v["password"]) {	
-			echo '
-				Close page
-				<form method="POST" action="/exit">
-				<input type="hidden" name="exit" value="exit">
-				<input type="submit" value="Выйти">
-				</form>';
+				try {
+					$loader = new Twig_Loader_Filesystem('templates');
+					$twig = new Twig_Environment($loader);
+					$template = $twig->loadTemplate('ClosePage.tmpl');
+					echo $template->render(array(
+					
+					));
+				} 
+				catch (Exception $cpage) {
+					die ('ERROR: ' . $cpage->getMessage());
+				}
 			}
 		}
 	}
