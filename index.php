@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-/**
+/*
 Задание 1.
 В KPI-Drive логика программы такова, что она разделена всего на 2 страницы:
 
@@ -22,16 +22,6 @@ require 'Slim/Slim.php';
 require_once '/Twig/lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-	try {
-		$loader = new Twig_Loader_Filesystem('templates');
-		$twig = new Twig_Environment($loader);
-		$template = $twig->loadTemplate('Head.tmpl');
-		echo $template->render(array());
-	} 
-	catch (Exception $auth) {
-		die ('ERROR: ' . $auth->getMessage());
-	}
-
 // require redBeanPHP
 require 'rb.php';
 R::setup('mysql:host=localhost;dbname=ria','root','');
@@ -51,7 +41,7 @@ $app->get(
         try {
 			$loader = new Twig_Loader_Filesystem('templates');
 			$twig = new Twig_Environment($loader);
-			$template = $twig->loadTemplate('Auth.tmpl');
+			$template = $twig->loadTemplate('auth/Auth.html');
 			echo $template->render(array());
 		} 
 		catch (Exception $auth) {

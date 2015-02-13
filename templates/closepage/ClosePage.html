@@ -1,0 +1,16 @@
+﻿<title>Закрытая страница</title>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2">
+			Sidebar content
+		</div>
+    <div class="span10">
+		<!--Body content-->
+		Close page, you are log in as "{{ login }}"
+		<form class="form-action" method="POST" action="/exit">
+			<input type="hidden" name="exit" value="exit">
+			<input class="btn btn-danger" type="submit" value="Выйти">
+		</form>
+	  </div>
+  </div>
+</div>
