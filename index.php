@@ -21,6 +21,8 @@ require 'Slim/Slim.php';
 // require twig
 require_once '/Twig/lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
+$loader = new Twig_Loader_Filesystem(array('templates'));
+$twig = new Twig_Environment($loader, array());
 
 // require redBeanPHP
 require 'rb.php';
@@ -33,45 +35,28 @@ $app = new \Slim\Slim();
 //get page '/' auth
 $app->get(
     '/',
-    function () use ($app) {
+    function () use ($app, $twig) {
 		if (isset($_SESSION['l']) && isset($_SESSION['p'])) {
 			$app->redirect('/api');
 		}
-		
-        try {
-			$loader = new Twig_Loader_Filesystem('templates');
-			$twig = new Twig_Environment($loader);
-			$template = $twig->loadTemplate('Auth.html');
-			echo $template->render(array());
-		} 
-		catch (Exception $auth) {
-			die ('ERROR: ' . $auth->getMessage());
-		}
-    }
+		echo $twig->render('Auth.html', array());
+	}
 );
 
 // get closed page '/api'
 $app->get(
     '/api',
-    function () use ($app) {
+    function () use ($app, $twig) {
 		if (!isset($_SESSION['l']) && !isset($_SESSION['p'])) {
 			$app->redirect('/');
 		}
 
 		$lp = R::getAll("SELECT login, password FROM users");
 		foreach ($lp as $k=>$v) {
-			if ($_SESSION['l'] == $v["login"] && $_SESSION['p'] == $v["password"]) {	
-				try {
-					$loader = new Twig_Loader_Filesystem('templates');
-					$twig = new Twig_Environment($loader);
-					$template = $twig->loadTemplate('ClosePage.html');
-					echo $template->render(array(
-						'login' => $_SESSION['l']
-					));
-				} 
-				catch (Exception $cpage) {
-					die ('ERROR: ' . $cpage->getMessage());
-				}
+			if ($_SESSION['l'] == $v["login"] && $_SESSION['p'] == $v["password"]) {				
+				echo $twig->render('ClosePage.html', array(
+					'login' => $_SESSION['l']
+					));	
 			}
 		}
 	}
