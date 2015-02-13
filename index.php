@@ -64,7 +64,7 @@ $app->get(
 				try {
 					$loader = new Twig_Loader_Filesystem('templates');
 					$twig = new Twig_Environment($loader);
-					$template = $twig->loadTemplate('ClosePage.tmpl');
+					$template = $twig->loadTemplate('closepage/ClosePage.html');
 					echo $template->render(array(
 						'login' => $_SESSION['l']
 					));
